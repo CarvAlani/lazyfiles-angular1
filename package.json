@@ -1,0 +1,21 @@
+{
+  "name": "angular1-gen",
+  "version": "0.0.1",
+  "description": "A simple and lightweight angular 1 apps generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "angular",
+    "angular1",
+    "generator",
+    "lightweight"
+  ],
+  "bin" : { "angular1-gen" : "index.js" }, 
+  "author": "Carlos Avilan",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
