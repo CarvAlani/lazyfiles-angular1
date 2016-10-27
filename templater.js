@@ -43,7 +43,7 @@ templater.config = function (prefix, mod) {
     '(function() {\n' +
     '\'use strict\';\n' +
     'angular\n' +
-    '  .module(\'' + mod + '\')' +
+    '  .module(\'' + mod + '\')\n' +
     '  .config(config);\n\n' +
     'function config() {};\n' +
     '})();';
@@ -56,9 +56,36 @@ templater.service = function (prefix, mod) {
     '(function() {\n' +
     '\'use strict\';\n' +
     'angular\n' +
-    '  .module(\'' + mod + '\')' +
+    '  .module(\'' + mod + '\')\n' +
     '  .service(\''+ prefix +'\', ' + prefix + ');\n\n' +
     'function ' + prefix + '() {};\n' +
+    '})();';
+};
+
+templater.factory = function (prefix, mod) {
+  var name = prefix + '.factory.js';
+
+  return '// ' + name + '\n' +
+    '(function() {\n' +
+    '\'use strict\';\n' +
+    'angular\n' +
+    '  .module(\'' + mod + '\')\n' +
+    '  .factory(\''+ prefix +'\', ' + prefix + ');\n\n' +
+    'function ' + prefix + '() {};\n' +
+    '})();';
+};
+
+templater.controller = function (prefix, mod) {
+  var name = prefix + '.controller.js';
+  var cname = prefix[0].toUpperCase() + prefix.substr(1) + 'Controller';
+
+  return '// ' + name + '\n' +
+    '(function() {\n' +
+    '\'use strict\';\n' +
+    'angular\n' +
+    '  .module(\'' + mod + '\')\n' +
+    '  .controller(\''+ cname +'\', ' + cname + ');\n\n' +
+    'function ' + cname + '() {};\n' +
     '})();';
 };
 
