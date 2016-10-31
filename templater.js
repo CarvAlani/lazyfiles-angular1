@@ -25,68 +25,46 @@ templater.gulpfile = function () {
   return '';
 };
 
-templater.module = function (prefix, mod) {
+templater.module = function (prefix) {
   var name = prefix + '.module.js';
 
   return '// ' + name + '\n' +
     '(function() {\n' +
     '\'use strict\';\n' +
     'angular\n' +
-    '  .module(\'' + prefix + '\', []);' +
+    '  .module(\'' + prefix + '\', []);\n' +
     '})();';
 };
 
-templater.config = function (prefix, mod) {
-  var name = prefix + '.config.js';
+templater.generic = function (prefix, mod, type) {
+  var name = prefix + '.' + type + '.js';
+  if (type === 'controller') {
+    var cname = prefix[0].toUpperCase() + prefix.substr(1) + 'Controller';
+  } else if (type === 'directive' || type === 'component') {
+    var cname = toCamelCase(prefix);
+  } else {
+    var cname = prefix;
+  }
 
   return '// ' + name + '\n' +
     '(function() {\n' +
     '\'use strict\';\n' +
     'angular\n' +
     '  .module(\'' + mod + '\')\n' +
-    '  .config(config);\n\n' +
-    'function config() {};\n' +
-    '})();';
-};
-
-templater.service = function (prefix, mod) {
-  var name = prefix + '.service.js';
-
-  return '// ' + name + '\n' +
-    '(function() {\n' +
-    '\'use strict\';\n' +
-    'angular\n' +
-    '  .module(\'' + mod + '\')\n' +
-    '  .service(\''+ prefix +'\', ' + prefix + ');\n\n' +
-    'function ' + prefix + '() {};\n' +
-    '})();';
-};
-
-templater.factory = function (prefix, mod) {
-  var name = prefix + '.factory.js';
-
-  return '// ' + name + '\n' +
-    '(function() {\n' +
-    '\'use strict\';\n' +
-    'angular\n' +
-    '  .module(\'' + mod + '\')\n' +
-    '  .factory(\''+ prefix +'\', ' + prefix + ');\n\n' +
-    'function ' + prefix + '() {};\n' +
-    '})();';
-};
-
-templater.controller = function (prefix, mod) {
-  var name = prefix + '.controller.js';
-  var cname = prefix[0].toUpperCase() + prefix.substr(1) + 'Controller';
-
-  return '// ' + name + '\n' +
-    '(function() {\n' +
-    '\'use strict\';\n' +
-    'angular\n' +
-    '  .module(\'' + mod + '\')\n' +
-    '  .controller(\''+ cname +'\', ' + cname + ');\n\n' +
+    '  .'+ type +'(\''+ cname +'\', ' + cname + ');\n\n' +
     'function ' + cname + '() {};\n' +
     '})();';
-};
+}
+
+function toCamelCase(word) {
+  var name = '';
+  var splited = word.split('-');
+  name += splited[0];
+  for (var i = 1; i < splited.length; i++) {
+    name += splited[i][0].toUpperCase() + splited[i].substr(1);
+  }
+
+  return name;
+}
 
 module.exports = templater;
