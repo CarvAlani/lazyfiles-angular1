@@ -5,18 +5,20 @@ var fs      = require('fs');
 var path    = require('path');
 var templater = require('./templater.js');
 
+var default_name = 'app';
+
 // TODO: change commander, maybe even improve it
 program
   .version('0.0.1')
   .option('-n, --new', 'New app')
-  .option('-m, --module [name]', 'Module name', 'app')
+  .option('-m, --module [name]', 'Module name', default_name)
   .option('-M, --new-module <name>', 'New module')
   .option('-s, --service <name>', 'New Service')
   .option('-F, --factory <name>', 'New Factory')
   .option('-f, --filter <name>', 'New Filter')
   .option('-c, --controller <name>', 'New Controller')
   .option('-d, --directive <name>', 'New Directive')
-  .option('-r, --route <state> [templateUrl] [url] [controller]', 'New Route') // TODO
+  // .option('-r, --route <state> [templateUrl] [url] [controller]', 'New Route') // NICE TO HAVE
   .option('-R, --route-file <name>', 'New Route file')
   .option('-C, --component <name>', 'New Component')
   .option('-p, --provider <name>', 'New Provider')
@@ -31,24 +33,24 @@ if (program.new) {
     fs.mkdirSync('scripts');
   }
 
-  if (!fs.existsSync('app')){
-    fs.mkdirSync('app');
+  if (!fs.existsSync(default_name)){
+    fs.mkdirSync(default_name);
   }
 
-  if (!fs.existsSync(path.join('app', 'content'))){
-    fs.mkdirSync(path.join('app', 'content'));
+  if (!fs.existsSync(path.join(default_name, 'content'))){
+    fs.mkdirSync(path.join(default_name, 'content'));
   }
 
-  if (!fs.existsSync(path.join('app', 'content', 'css'))){
-    fs.mkdirSync(path.join('app', 'content', 'css'));
+  if (!fs.existsSync(path.join(default_name, 'content', 'css'))){
+    fs.mkdirSync(path.join(default_name, 'content', 'css'));
   }
 
-  if (!fs.existsSync(path.join('app', 'content', 'img'))){
-    fs.mkdirSync(path.join('app', 'content', 'img'));
+  if (!fs.existsSync(path.join(default_name, 'content', 'img'))){
+    fs.mkdirSync(path.join(default_name, 'content', 'img'));
   }
 
-  if (!fs.existsSync(path.join('app', 'content', 'fonts'))){
-    fs.mkdirSync(path.join('app', 'content', 'fonts'));
+  if (!fs.existsSync(path.join(default_name, 'content', 'fonts'))){
+    fs.mkdirSync(path.join(default_name, 'content', 'fonts'));
   }
 
   fs.writeFile('index.html', templater.html(), function (err) {
@@ -61,14 +63,14 @@ if (program.new) {
     console.log('Created gulpfile.js');
   });
 
-  fs.writeFile(path.join('app','app.module.js'), templater.module('app'), function (err) {
+  fs.writeFile(path.join(default_name, default_name + '.module.js'), templater.module(default_name), function (err) {
     if (err) return console.log(err);
-    console.log('Created app.module.js');
+    console.log('Created ' + default_name + '.module.js');
   });
 
-  fs.writeFile(path.join('app','app.config.js'), templater.generic('config', 'app', 'config'), function (err) {
+  fs.writeFile(path.join(default_name, default_name + '.config.js'), templater.generic('config', default_name, 'config'), function (err) {
     if (err) return console.log(err);
-    console.log('Created app.config.js');
+    console.log('Created ' + default_name + '.config.js');
   });
 }
 
@@ -90,6 +92,7 @@ if (program.service) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+  groupByPrefix(program.service);
 }
 
 // New Factory
@@ -100,6 +103,7 @@ if (program.factory) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+  groupByPrefix(program.factory);
 }
 
 // New Filter
@@ -110,6 +114,7 @@ if (program.filter) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+  groupByPrefix(program.filter);
 }
 
 // New Controller
@@ -120,6 +125,7 @@ if (program.controller) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+  groupByPrefix(program.controller);
 }
 
 // New Directive
@@ -174,11 +180,45 @@ if (program.newModule) {
   });
 }
 
-// TODO: New Route
-if (program.route) {
-  // console.log('state: ', program.route);
-  // console.log(program.args);
-}
+// NICE TO HAVE: New Route
+// if (program.route) {
+//   console.log('state: ', program.route);
+//   console.log(program.args);
+// }
 
-// TODO: group in folders by prefix
-// TODO: check if exists first and ask if user wants to overwrite
+// group in folders by prefix
+function groupByPrefix(prefix) {
+  // console.log(path.join(process.cwd(), default_name));
+  // prefix = 'asd';
+  var dirs = getDirectories(path.join(process.cwd(), default_name))
+    .filter(function (item) {
+      return item === prefix;
+    });
+  // console.log('dirs: ', dirs);
+  fs.readdir(path.join(process.cwd(), default_name), function(err, items) {
+    files = items.filter(function (item) {
+      return item.indexOf('.js') !== -1 && item.indexOf(default_name) === -1 && item.indexOf(prefix) !== -1;
+    });
+    // console.log('files: ', files);
+
+    if (dirs.length === 0 && files.length > 3) {
+      if (!fs.existsSync(path.join(program.module, prefix))){
+        fs.mkdirSync(path.join(program.module, prefix));
+      }
+      for (var i = 0; i < files.length; i++) {
+        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, prefix, files[i]));
+      }
+    }
+    if (dirs.length !== 0) {
+      for (var i = 0; i < files.length; i++) {
+        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, prefix, files[i]));
+      }
+    }
+  });
+};
+
+function getDirectories(srcpath) {
+  return fs.readdirSync(srcpath).filter(function(file) {
+    return fs.statSync(path.join(srcpath, file)).isDirectory();
+  });
+}
