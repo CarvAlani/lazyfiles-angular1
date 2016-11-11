@@ -142,13 +142,15 @@ if (program.directive) {
     if (err) return console.log(err);
     console.log('Created ' + tname);
   });
+
+  groupByPrefix(program.directive);
 }
 
 // New Component
 if (program.component) {
   console.log('Adding new component ');
   var fname = program.component + '.component.js';
-  var tname = program.directive + '.component.html';
+  var tname = program.component + '.component.html';
   fs.writeFile(path.join(program.module, fname), templater.generic(program.component, program.module, 'component'), function (err) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
@@ -158,6 +160,8 @@ if (program.component) {
     if (err) return console.log(err);
     console.log('Created ' + tname);
   });
+
+  groupByPrefix(program.component);
 }
 
 // New Routes file
@@ -168,6 +172,8 @@ if (program.routeFile) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+
+  groupByPrefix(program.routeFile);
 }
 
 // New Module
@@ -178,6 +184,8 @@ if (program.newModule) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
+
+  groupByPrefix(program.controller);
 }
 
 // NICE TO HAVE: New Route
