@@ -1,6 +1,6 @@
 {
-  "name": "angular1-gen",
-  "version": "0.0.1",
+  "name": "lazyfiles-angular1",
+  "version": "1.0.0",
   "description": "A simple and lightweight angular 1 apps and file generator",
   "main": "index.js",
   "scripts": {
