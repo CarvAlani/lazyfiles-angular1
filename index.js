@@ -92,7 +92,7 @@ if (program.service) {
     if (err) return console.log(err);
     console.log('Created ' + fname);
   });
-  groupByPrefix(program.service);
+  groupByPrefix('service');
 }
 
 // New Factory
@@ -196,11 +196,11 @@ if (program.newModule) {
 
 // group in folders by prefix
 function groupByPrefix(prefix) {
-  // console.log(path.join(process.cwd(), default_name));
-  // prefix = 'asd';
+  var final_prefix = prefix === 'service' ? 'services' : prefix;
+
   var dirs = getDirectories(path.join(process.cwd(), default_name))
     .filter(function (item) {
-      return item === prefix;
+      return item === final_prefix;
     });
   // console.log('dirs: ', dirs);
   fs.readdir(path.join(process.cwd(), default_name), function(err, items) {
@@ -210,16 +210,16 @@ function groupByPrefix(prefix) {
     // console.log('files: ', files);
 
     if (dirs.length === 0 && files.length > 3) {
-      if (!fs.existsSync(path.join(program.module, prefix))){
-        fs.mkdirSync(path.join(program.module, prefix));
+      if (!fs.existsSync(path.join(program.module, final_prefix))){
+        fs.mkdirSync(path.join(program.module, final_prefix));
       }
       for (var i = 0; i < files.length; i++) {
-        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, prefix, files[i]));
+        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, final_prefix, files[i]));
       }
     }
     if (dirs.length !== 0) {
       for (var i = 0; i < files.length; i++) {
-        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, prefix, files[i]));
+        fs.renameSync(path.join(process.cwd(), program.module, files[i]), path.join(program.module, final_prefix, files[i]));
       }
     }
   });
