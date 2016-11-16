@@ -1,4 +1,47 @@
-# angular1-gen
+# lazyfiles-angular1
+
+Generates Angular 1 files following Jhon Papa [styleguide](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md "Jhon Papa styleguide"). Group by prefix if it is repeated more than 3 times.
+
+## STRUCTURE
+#### \[EXTRA SMALL APP\]
+- index.html
+- scripts
+- app
+  - app.module.js
+  - app.config.js
+  - data.service.js
+  - content
+    - css
+    - fonts
+    - images
+
+#### \[OTHER APPS - more than 7 files\]
+- index.html
+- app
+  - app.module.js
+  - app.config.js
+  - services
+    - data.service.js
+    - another.service.js
+  - drawer1
+    - drawer1.routes.js
+    - drawer1.controller.js
+    - drawer1.whatever.js
+  - .
+  - .
+  - .
+  - drawern
+    - drawern.routes.js
+    - drawern.controller.js
+    - drawern.whatever.js
+  - content
+    - css
+    - fonts
+    - images
+
+### CONVENTIONS
+- 1 feature per file
+- every file has its feature in its extention, i.e. posts.controller.js
 
 ## Install
 
@@ -12,7 +55,7 @@
 
 **New app:** -n, --new
 
-**Module name:** -m, --module [name] (default name is 'app')
+**Module name:** -m, --module \[name\] (default name is 'app')
 
 **New module:** -M, --new-module <name>
 
